@@ -49,9 +49,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         Logger.v("MainActivity onCreate");
 
-        // UncaughtExceptionHandler初期化
-        MyUncaughtExceptionHandler.init(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

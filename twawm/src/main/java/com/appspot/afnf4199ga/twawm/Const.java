@@ -25,8 +25,8 @@ public class Const {
 
     public static final String INTENT_PREFIX = Const.class.getPackage().getName() + ".INTENT";
     public static final String INTENT_WD_CLICKED = INTENT_PREFIX + ".WD_CLICKED";
-    public static final String INTENT_WD_UPDATE = INTENT_PREFIX + ".WD_UPDATED";
-    public static final String INTENT_WD_CHANGE_STYLE = INTENT_PREFIX + ".WD_CHANGE_STYLE";
+    public static final String INTENT_WD_UPDATED = INTENT_PREFIX + ".WD_UPDATED";
+    public static final String INTENT_WD_STYLE_CHANGED = INTENT_PREFIX + ".WD_STYLE_CHANGED";
     public static final String INTENT_DELETED = INTENT_PREFIX + ".WD_DELETED";
     public static final String INTENT_APP_CLOSED = INTENT_PREFIX + ".APP_CLOSED";
     public static final String INTENT_ROUTER_INFO_FETCHED = INTENT_PREFIX + ".ROUTER_INFO_FETCHED";

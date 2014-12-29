@@ -72,9 +72,6 @@ public class BackgroundService extends Service {
     public void onCreate() {
         Logger.v("BackgroundService onCreate");
 
-        // UncaughtExceptionHandler初期化
-        MyUncaughtExceptionHandler.init(this);
-
         // 初期処理
         super.onCreate();
         instance = this;

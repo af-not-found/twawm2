@@ -95,8 +95,8 @@ public class DefaultWidgetProvider extends AppWidgetProvider {
         // またはINTENT_WD_CHANGE_STYLE
         // またはINTENT_WD_UPDATE
         boolean update = (AndroidUtils.isActionEquals(intent, AppWidgetManager.ACTION_APPWIDGET_UPDATE) == false && forceUpdate)
-                || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_CHANGE_STYLE)
-                || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_UPDATE);
+                || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_STYLE_CHANGED)
+                || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_UPDATED);
 
         // onUpdateに委譲
         if (update) {
@@ -104,7 +104,7 @@ public class DefaultWidgetProvider extends AppWidgetProvider {
         }
 
         // Style変更
-        if (forceUpdate || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_CHANGE_STYLE)) {
+        if (forceUpdate || AndroidUtils.isActionEquals(intent, Const.INTENT_WD_STYLE_CHANGED)) {
             // Logger.v("Widget style changed");
 
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_default);
@@ -119,11 +119,6 @@ public class DefaultWidgetProvider extends AppWidgetProvider {
                 appWidgetManager.updateAppWidget(id, rv);
             }
         }
-    }
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,13 +183,13 @@ public class DefaultWidgetProvider extends AppWidgetProvider {
 
     public static void update(Context context) {
         Intent intent = new Intent(context, DefaultWidgetProvider.class);
-        intent.setAction(Const.INTENT_WD_UPDATE);
+        intent.setAction(Const.INTENT_WD_UPDATED);
         context.sendBroadcast(intent);
     }
 
     public static void changeStyle(Context context) {
         Intent intent = new Intent(context, DefaultWidgetProvider.class);
-        intent.setAction(Const.INTENT_WD_CHANGE_STYLE);
+        intent.setAction(Const.INTENT_WD_STYLE_CHANGED);
         context.sendBroadcast(intent);
     }
 
