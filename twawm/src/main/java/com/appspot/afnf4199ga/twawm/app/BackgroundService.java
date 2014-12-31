@@ -1,11 +1,5 @@
 package com.appspot.afnf4199ga.twawm.app;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.afnf.and.twawm2.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -43,7 +37,13 @@ import com.appspot.afnf4199ga.twawm.router.RouterControlByHttp.CTRL;
 import com.appspot.afnf4199ga.utils.AndroidUtils;
 import com.appspot.afnf4199ga.utils.Logger;
 import com.appspot.afnf4199ga.utils.MyStringUtlis;
-import com.appspot.afnf4199ga.utils.MyUncaughtExceptionHandler;
+
+import net.afnf.and.twawm2.R;
+
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BackgroundService extends Service {
 
@@ -416,7 +416,7 @@ public class BackgroundService extends Service {
     }
 
     protected static Set<Integer> getSwitchTargetNetworkIdSet(WifiInfo connectionInfo, String confssid,
-            List<ScanResult> scanResults, List<WifiConfiguration> configuredNetworks) {
+                                                              List<ScanResult> scanResults, List<WifiConfiguration> configuredNetworks) {
 
         // 現在のSSIDが空の場合、抜ける
         if (connectionInfo == null) {
@@ -454,7 +454,8 @@ public class BackgroundService extends Service {
         // スキャン結果でループ
         boolean found = false;
         Iterator<ScanResult> ite = scanResults.iterator();
-        SR: while (ite.hasNext()) {
+        SR:
+        while (ite.hasNext()) {
             ScanResult scanResult = (ScanResult) ite.next();
 
             // スキャン結果に合致する設定SSIDが見つかった場合
@@ -943,7 +944,7 @@ public class BackgroundService extends Service {
                 public void run() {
                     AndroidUtils.sleep(60000);
                     releaseWakeLock();
-                };
+                }
             }.start();
         }
     }
@@ -960,7 +961,7 @@ public class BackgroundService extends Service {
 
     public static enum ConnectivityState {
         COMPLETE_WIFI, COMPLETE_MOBILE, STANDBY_OK, NONE
-    };
+    }
 
     public ConnectivityState getConnectivityState() {
 
@@ -1001,7 +1002,7 @@ public class BackgroundService extends Service {
 
     /**
      * WiFiが無効でもtrueを返す場合がある
-     * 
+     *
      * @return
      */
     public boolean isSupplicantCompleted() {
@@ -1010,7 +1011,7 @@ public class BackgroundService extends Service {
 
     /**
      * WiFiが無効でもtrueを返す場合がある
-     * 
+     *
      * @param wifi
      * @return
      */

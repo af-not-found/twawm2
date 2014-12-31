@@ -1,12 +1,5 @@
 package com.appspot.afnf4199ga.twawm;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import net.afnf.and.twawm2.R;
 import android.content.Context;
 
 import com.appspot.afnf4199ga.twawm.app.BackgroundService;
@@ -18,6 +11,14 @@ import com.appspot.afnf4199ga.twawm.router.RouterInfo.COM_TYPE;
 import com.appspot.afnf4199ga.utils.AndroidUtils;
 import com.appspot.afnf4199ga.utils.Logger;
 import com.appspot.afnf4199ga.utils.MyStringUtlis;
+
+import net.afnf.and.twawm2.R;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 public class StateMachine {
 
@@ -86,8 +87,9 @@ public class StateMachine {
             Iterator<STATE> ite = EnumSet.allOf(STATE.class).iterator();
             while (ite.hasNext()) {
                 STATE e = ite.next();
-                if (e.ordinal() == ordinal)
+                if (e.ordinal() == ordinal) {
                     return e;
+                }
             }
             return null;
         }
@@ -95,7 +97,7 @@ public class StateMachine {
 
     public enum NETWORK_STATE {
         AP_NOT_FOUND, NOT_WM_ROUTER, OFFLINE, ONLINE
-    };
+    }
 
     public static enum TRIGGER {
         /** 起動 */
@@ -143,8 +145,9 @@ public class StateMachine {
             Iterator<TRIGGER> ite = EnumSet.allOf(TRIGGER.class).iterator();
             while (ite.hasNext()) {
                 TRIGGER e = ite.next();
-                if (e.ordinal() == ordinal)
+                if (e.ordinal() == ordinal) {
                     return e;
+                }
             }
             return null;
         }
@@ -164,7 +167,7 @@ public class StateMachine {
             "---------012zz-----4",
             "-------------4-----8",
             "-------------3-x3--4",
-            "-------------4-----4" };
+            "-------------4-----4"};
 
     public static final String[] ACTION_ARRAY = {
             "CY-D-----WW##-S--C-A",
@@ -180,7 +183,7 @@ public class StateMachine {
             "---------WW#ZZ-----A",
             "-------------D-----E",
             "-------------#-X#--A",
-            "-------------#-----A" };
+            "-------------#-----A"};
 
     public static final int[] ANNTENA_LEVEL_BY_STATE = {
             //
@@ -303,6 +306,7 @@ public class StateMachine {
     }
 
     private static HashMap<Character, Integer> stateCharMap = new HashMap<Character, Integer>();
+
     static {
         stateCharMap.put('0', 0);
         stateCharMap.put('1', 1);
@@ -454,49 +458,49 @@ public class StateMachine {
             reflesh(stanbyToWifioff);
 
             switch (action) {
-            case 'E':
-                service.enableWifi();
-                break;
+                case 'E':
+                    service.enableWifi();
+                    break;
 
-            case 'C':
-                service.checkOnline();
-                break;
+                case 'C':
+                    service.checkOnline();
+                    break;
 
-            case 'W':
-                service.checkOnlineWithDelay();
-                break;
+                case 'W':
+                    service.checkOnlineWithDelay();
+                    break;
 
-            case 'D':
-                service.disableWifi();
-                break;
+                case 'D':
+                    service.disableWifi();
+                    break;
 
-            case 'S':
-                service.standby();
-                break;
+                case 'S':
+                    service.standby();
+                    break;
 
-            case 'P':
-                service.waitSupplicantComplete();
-                break;
+                case 'P':
+                    service.waitSupplicantComplete();
+                    break;
 
-            case 'A':
-                service.wifiDisabled();
-                break;
+                case 'A':
+                    service.wifiDisabled();
+                    break;
 
-            case 'M':
-                service.disableBT();
-                break;
+                case 'M':
+                    service.disableBT();
+                    break;
 
-            case 'N':
-                service.enableBT();
-                break;
+                case 'N':
+                    service.enableBT();
+                    break;
 
-            case 'B':
-                service.bluetoothResume();
-                break;
+                case 'B':
+                    service.bluetoothResume();
+                    break;
 
-            case '#':
-                // do nothing
-                break;
+                case '#':
+                    // do nothing
+                    break;
             }
         }
     }

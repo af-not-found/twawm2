@@ -139,7 +139,7 @@ public class LogSendActivity extends Activity {
 
     enum RET {
         OK, NG, NOFILE
-    };
+    }
 
     private void sendLog() {
 
