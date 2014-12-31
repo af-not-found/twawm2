@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-apply from: 'D:\\android\\app\\signkey\\myKeyConfig.gradle'
+apply from: 'D:/android/app/signkey/keyInfo.gradle'
 
 android {
     compileSdkVersion 19
@@ -20,6 +20,15 @@ android {
         versionCode 60
         versionName "0.6.4"
         testInstrumentationRunner "net.afnf.and.twawm2.MyInstrumentationTestRunner"
+    }
+
+    signingConfigs {
+        myKeyConfig {
+            storeFile file(keyInfo_storeFile)
+            storePassword keyInfo_storePassword
+            keyAlias keyInfo_keyAlias
+            keyPassword keyInfo_keyPassword
+        }
     }
 
     buildTypes {

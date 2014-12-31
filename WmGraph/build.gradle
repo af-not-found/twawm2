@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-apply from: 'D:\\android\\app\\signkey\\myKeyConfig.gradle'
+apply from: 'D:/android/app/signkey/keyInfo.gradle'
 
 android {
     compileSdkVersion 19
@@ -12,6 +12,15 @@ android {
         targetSdkVersion 8
         versionCode 3
         versionName "0.2.2"
+    }
+
+    signingConfigs {
+        myKeyConfig {
+            storeFile file(keyInfo_storeFile)
+            storePassword keyInfo_storePassword
+            keyAlias keyInfo_keyAlias
+            keyPassword keyInfo_keyPassword
+        }
     }
 
     buildTypes {
