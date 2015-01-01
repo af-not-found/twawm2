@@ -1,12 +1,5 @@
 package com.appspot.afnf4199ga.twawm;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
-
-import net.afnf.and.twawm2.R;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -17,6 +10,14 @@ import com.appspot.afnf4199ga.twawm.TwawmUtils.BT_RESUME_TYPE;
 import com.appspot.afnf4199ga.utils.AndroidUtils;
 import com.appspot.afnf4199ga.utils.Logger;
 import com.appspot.afnf4199ga.utils.MyStringUtlis;
+
+import net.afnf.and.twawm2.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 public class Const {
 
@@ -78,7 +79,7 @@ public class Const {
     public static final UUID BLUETOOTH_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     public static final int NOTIF_ID_MAIN = 1;
-    public static final int NOTIF_ID_EX = 2;
+    public static final int NOTIF_ID_HANDSUP = 2;
     public static final int REQUEST_ENABLE_BT = 1;
 
     public static final String LOG_SEND_SERVER = "https://afnf4199ga.appspot.com/andreport/upload";

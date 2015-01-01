@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- 画面 -->
     <string name="resume">Resume</string>
@@ -26,7 +26,7 @@
     <string name="invalid_format">[Warning] Inputed value format is invalid</string>
     <string name="router_ip_addr_not_set">[Warning] Router IP address is not set</string>
     <string name="bt_error_need_to_reboot">[Warning] Bluetooth error occurred. Need to reboot.</string>
-    
+
     <!-- 初期設定ウィザード -->
     <string name="wizard_title">Configuration wizard</string>
     <string name="wizard_text_init">Starting initial configuration wizard for twawm2. It will only take 5 minutes.</string>
@@ -160,12 +160,12 @@
     <string name="menu_non_target_router_action_summay">Select action when connecting non WM3800R/NAD11 router</string>
     <string name="menu_enable_logging_title">Enable logging</string>
     <string name="menu_enable_logging_summary">Output directly is following. Logs older than 7days are deleted automatically.\n</string>
-    
+
     <!-- スタンバイ後の挙動 -->
     <string name="menu_action_after_suspend__wifioff_stop_service_label">Wi-Fi OFF and stop service</string>
     <string name="menu_action_after_suspend__stop_service_label">Stop service</string>
     <string name="menu_action_after_suspend__do_nothing_label">Do nothing</string>
-    
+
     <!-- ステータスバー通知 -->
     <string name="menu_statusbar_notify__always_label">Always</string>
     <string name="menu_statusbar_notify__changed_label">When changed</string>
@@ -176,7 +176,7 @@
     <string name="menu_non_target_router_action__notify_stop_label">Notify and stop service</string>
     <string name="menu_non_target_router_action__stop_label">Stop service without notify</string>
     <string name="menu_non_target_router_action__none_label">Do nothing</string>
-    
+
     <!-- リモート起動設定 -->
     <string name="menu_bluetooth_category">Router resume settings</string>
     <string name="menu_bt_resume_type_title">Resume type</string>

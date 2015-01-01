@@ -18,6 +18,7 @@ import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -62,6 +63,7 @@ public class BackgroundService extends Service {
     private BluetoothHelper btHelper = null;
     private Boolean ecoCharge = null;
     private int onlineCheckCompleteCount = 0;
+    private String prevNotifyText = "";
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -109,7 +111,7 @@ public class BackgroundService extends Service {
 
                 // フォアグラウンド起動
                 startForeground(Const.NOTIF_ID_MAIN,
-                        createNotification(R.drawable.ntficon_wimax_gray_batt_na, getString(R.string.service_started_long)));
+                        createNotification(R.drawable.ntficon_wimax_gray_batt_na, getString(R.string.service_started_long), false));
             }
         }
         // 一時停止中
@@ -878,25 +880,49 @@ public class BackgroundService extends Service {
     }
 
     public void postNotify(int notifyImageId, String notifyText) {
-        Logger.v("BackgroundService postNotify");
+        //Logger.v("BackgroundService postNotify");
 
+        // ステータスバーに通知する場合
         if (Const.isStatusBarNotifyNever(this) == false) {
-            NotificationManager nman = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager nman = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            // 常に通知する場合
-            if (Const.isStatusBarNotifyAlways(this)) {
-                // 一旦フォアグラウンドをキャンセルしてから再度起動
-                stopForeground(true);
-                startForeground(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText));
+            // Ticker表示するかどうか
+            boolean showTicker = false;
+            if (Const.isStatusBarNotifyAlways(this) || MyStringUtlis.eqauls(notifyText, prevNotifyText) == false) {
+                showTicker = true;
             }
-            else {
-                // 普通に通知
-                nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText));
+            prevNotifyText = notifyText;
+
+            // 普通に通知
+            nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+
+            if (showTicker) {
+                // Android4.4以下
+                if (Build.VERSION.SDK_INT <= 20) {
+                    // 一旦フォアグラウンドをキャンセルしてから再度起動
+                    stopForeground(true);
+                    startForeground(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+                    nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+                }
+                // Android5.0以上
+                else {
+                    // Hans Up Notificationを表示
+                    nman.notify(Const.NOTIF_ID_HANDSUP, createNotification(notifyImageId, notifyText, true));
+
+                    // 2.5秒後にキャンセル
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AndroidUtils.sleep(2500);
+                            nman.cancel(Const.NOTIF_ID_HANDSUP);
+                        }
+                    }).start();
+                }
             }
         }
     }
 
-    private Notification createNotification(int notifyImageId, String notifyText) {
+    private Notification createNotification(int notifyImageId, String notifyText, boolean handsup) {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
@@ -906,6 +932,10 @@ public class BackgroundService extends Service {
         builder.setContentTitle(getString(R.string.app_name));
         builder.setContentText(notifyText);
         builder.setWhen(System.currentTimeMillis());
+        if (handsup) {
+            builder.setPriority(Notification.PRIORITY_HIGH);
+            builder.setVibrate(new long[]{60000, 100});
+        }
         return builder.build();
     }
 

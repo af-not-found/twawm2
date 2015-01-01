@@ -302,7 +302,6 @@ public class StateMachine {
         this.comState = COM_TYPE.NA;
         this.comSetting = COM_TYPE.NA;
         this.wifiSpotEnabled = null;
-
     }
 
     private static HashMap<Character, Integer> stateCharMap = new HashMap<Character, Integer>();

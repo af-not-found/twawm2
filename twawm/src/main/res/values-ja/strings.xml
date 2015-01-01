@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- 画面 -->
     <string name="resume">リモート起動</string>
@@ -148,7 +148,7 @@
     <string name="menu_reset_batt_history_title">放電履歴をリセット</string>
     <string name="menu_reset_batt_history_toast">リセットしました</string>
     <string name="menu_reset_batt_history_summary">現在の平均値 : %1$s%%/h</string>
-    
+
     <!-- サービス設定 -->
     <string name="menu_service_category">サービス設定</string>
     <string name="menu_action_after_suspend_title">スタンバイ後の挙動</string>
@@ -165,7 +165,7 @@
     <string name="menu_action_after_suspend__wifioff_stop_service_label">Wi-Fiオフ、サービス停止</string>
     <string name="menu_action_after_suspend__stop_service_label">サービス停止</string>
     <string name="menu_action_after_suspend__do_nothing_label">なにもしない</string>
-    
+
     <!-- ステータスバー通知 -->
     <string name="menu_statusbar_notify__always_label">常に通知</string>
     <string name="menu_statusbar_notify__changed_label">変化した場合</string>
@@ -176,7 +176,7 @@
     <string name="menu_non_target_router_action__notify_stop_label">通知してサービス停止</string>
     <string name="menu_non_target_router_action__stop_label">通知なしにサービス停止</string>
     <string name="menu_non_target_router_action__none_label">なにもしない</string>
-    
+
     <!-- リモート起動設定 -->
     <string name="menu_bluetooth_category">リモート起動設定</string>
     <string name="menu_bt_resume_type_title">リモート起動方法</string>
@@ -191,7 +191,7 @@
     <string name="menu_wait_after_resume_title">リモート起動後のウェイト</string>
     <string name="menu_wait_after_resume_summary">NAD11はリモート起動直後のWi-Fiが不安定なので、6秒程度のウェイト挿入を推奨します</string>
     <string name="menu_wait_after_resume_dialog_title">リモート起動後のウェイト[秒] (推奨設定=4～10)</string>
-    
+
     <!-- リモート起動方法 -->
     <string name="menu_bt_resume_type__fast_label">高速</string>
     <string name="menu_bt_resume_type__normal_label">通常</string>
@@ -211,5 +211,5 @@
     <string name="menu_reset_settings_title">設定を初期化する</string>
     <string name="menu_reset_settings_summay">全ての設定をリセットし、初期状態に戻します</string>
     <string name="reset_settings_succeeded">設定の初期化が完了しました</string>
-    
+
 </resources>
