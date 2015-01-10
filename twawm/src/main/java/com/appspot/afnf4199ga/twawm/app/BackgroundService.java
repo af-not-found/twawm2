@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
@@ -938,7 +939,7 @@ public class BackgroundService extends Service {
                     nman.notify(Const.NOTIF_ID_HEADSUP, createNotification(notifyImageId, notifyText, true));
 
                     // 2.5秒後にキャンセル
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             nman.cancel(Const.NOTIF_ID_HEADSUP);
