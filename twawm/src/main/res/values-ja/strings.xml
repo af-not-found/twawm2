@@ -169,6 +169,7 @@
     <!-- ステータスバー通知 -->
     <string name="menu_statusbar_notify__always_label">常に通知</string>
     <string name="menu_statusbar_notify__changed_label">変化した場合</string>
+    <string name="menu_statusbar_notify__icon_only_label">アイコンのみ表示</string>
     <string name="menu_statusbar_notify__never_label">通知しない</string>
 
     <!-- 対応外ルーターに接続した場合の挙動 -->

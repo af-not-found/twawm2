@@ -1,8 +1,5 @@
 package com.appspot.afnf4199ga.twawm.app;
 
-import java.util.ArrayList;
-
-import net.afnf.and.twawm2.R;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,7 +34,10 @@ import com.appspot.afnf4199ga.twawm.router.RouterInfo.COM_TYPE;
 import com.appspot.afnf4199ga.utils.AndroidUtils;
 import com.appspot.afnf4199ga.utils.Logger;
 import com.appspot.afnf4199ga.utils.MyStringUtlis;
-import com.appspot.afnf4199ga.utils.MyUncaughtExceptionHandler;
+
+import net.afnf.and.twawm2.R;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
@@ -602,7 +602,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        int[] ids = { R.id.layoutButtonCommon, R.id.layoutSub, R.id.layoutWm, R.id.layoutNad /* R.id.layoutKeepHs*/};
+        int[] ids = {R.id.layoutButtonCommon, R.id.layoutSub, R.id.layoutWm, R.id.layoutNad /* R.id.layoutKeepHs*/};
         for (int id : ids) {
             LinearLayout layout = (LinearLayout) findViewById(id);
             if (layout != null && layout.getLayoutParams() instanceof MarginLayoutParams) {

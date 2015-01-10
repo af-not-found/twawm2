@@ -3,16 +3,19 @@
     <!-- ステータスバー通知 -->
     <string name="menu_statusbar_notify__always" translatable="false">always</string>
     <string name="menu_statusbar_notify__changed" translatable="false">when changed</string>
+    <string name="menu_statusbar_notify__icon_only" translatable="false">icon_only</string>
     <string name="menu_statusbar_notify__never" translatable="false">never</string>
 
     <string-array name="entries_menu_statusbar_notify">
         <item>@string/menu_statusbar_notify__always_label</item>
         <item>@string/menu_statusbar_notify__changed_label</item>
+        <item>@string/menu_statusbar_notify__icon_only_label</item>
         <item>@string/menu_statusbar_notify__never_label</item>
     </string-array>
     <string-array name="entryValues_menu_statusbar_notify">
         <item>@string/menu_statusbar_notify__always</item>
         <item>@string/menu_statusbar_notify__changed</item>
+        <item>@string/menu_statusbar_notify__icon_only</item>
         <item>@string/menu_statusbar_notify__never</item>
     </string-array>
 

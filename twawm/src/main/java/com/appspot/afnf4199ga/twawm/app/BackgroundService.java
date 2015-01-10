@@ -19,6 +19,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -56,7 +57,7 @@ public class BackgroundService extends Service {
 
     private Thread watchdogThread;
     private OnlineChecker onlineCheckerThread;
-    private StateMachine state = new StateMachine();
+    private StateMachine state;
     private boolean shortIntervalCheck = false;
     private int shortIntervalCount = 0;
     private boolean receiverRegisted = false;
@@ -64,6 +65,7 @@ public class BackgroundService extends Service {
     private Boolean ecoCharge = null;
     private int onlineCheckCompleteCount = 0;
     private String prevNotifyText = "";
+    private NotificationCompat.Builder notificationBuilder;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -80,6 +82,15 @@ public class BackgroundService extends Service {
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         conn = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         power = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        state = new StateMachine();
+        shortIntervalCheck = false;
+        shortIntervalCount = 0;
+        receiverRegisted = false;
+        btHelper = null;
+        ecoCharge = null;
+        onlineCheckCompleteCount = 0;
+        prevNotifyText = "";
+        notificationBuilder = null;
 
         // 初期状態設定
         boolean enabled = AndroidUtils.isWifiEnabled(wifi);
@@ -106,13 +117,8 @@ public class BackgroundService extends Service {
             // 念のためsetClickIntentしておく
             DefaultWidgetProvider.setClickIntent(this);
 
-            // ステータスバーに通知する場合
-            if (Const.isStatusBarNotifyNever(this) == false) {
-
-                // フォアグラウンド起動
-                startForeground(Const.NOTIF_ID_MAIN,
-                        createNotification(R.drawable.ntficon_wimax_gray_batt_na, getString(R.string.service_started_long), false));
-            }
+            // ステータスバー通知とフォアグラウンド起動
+            postNotify(R.drawable.ntficon_wimax_gray_batt_na, getString(R.string.service_started_long));
         }
         // 一時停止中
         else {
@@ -214,6 +220,11 @@ public class BackgroundService extends Service {
             stopForeground(true);
         }
 
+        // 通知削除
+        NotificationManager nman = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nman.cancel(Const.NOTIF_ID_MAIN);
+        nman.cancel(Const.NOTIF_ID_HEADSUP);
+
         if (receiverRegisted) {
             unregisterReceiver(broadcastReceiver);
             receiverRegisted = false;
@@ -222,6 +233,7 @@ public class BackgroundService extends Service {
         stopWatchdog();
         terminateOnlineCheck();
         instance = null;
+        notificationBuilder = null;
 
         // ログ書き出し
         Logger.startFlushThread(true);
@@ -399,6 +411,7 @@ public class BackgroundService extends Service {
                         }
 
                         // 移動元を無効にしてしまったので、20秒後に戻す
+                        // TODO Threadを使わないようにする
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -888,54 +901,94 @@ public class BackgroundService extends Service {
 
             // Ticker表示するかどうか
             boolean showTicker = false;
-            if (Const.isStatusBarNotifyAlways(this) || MyStringUtlis.eqauls(notifyText, prevNotifyText) == false) {
+            if (Const.isStatusBarNotifyAlways(this)
+                    || (Const.isStatusBarNotifyWhenChanged(this) && MyStringUtlis.eqauls(notifyText, prevNotifyText) == false)) {
                 showTicker = true;
             }
             prevNotifyText = notifyText;
 
-            // 普通に通知
-            nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+            // Android4.4以下
+            if (Build.VERSION.SDK_INT <= 20) {
 
-            if (showTicker) {
-                // Android4.4以下
-                if (Build.VERSION.SDK_INT <= 20) {
-                    // 一旦フォアグラウンドをキャンセルしてから再度起動
+                // 初回、またはTicker表示の場合
+                if (notificationBuilder == null || showTicker) {
+                    // 一旦フォアグラウンドをキャンセルすれば、TickerTextが同一でもTicker表示できる
                     stopForeground(true);
                     startForeground(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+                }
+                // アイコン更新
+                else {
                     nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
                 }
-                // Android5.0以上
+            }
+            // Android5.0以上
+            else {
+
+                // 初回の場合
+                if (notificationBuilder == null) {
+                    startForeground(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+                }
+                // アイコン更新
                 else {
-                    // Hans Up Notificationを表示
-                    nman.notify(Const.NOTIF_ID_HANDSUP, createNotification(notifyImageId, notifyText, true));
+                    nman.notify(Const.NOTIF_ID_MAIN, createNotification(notifyImageId, notifyText, false));
+                }
+
+                if (showTicker) {
+                    // Heads Up Notificationを表示
+                    nman.notify(Const.NOTIF_ID_HEADSUP, createNotification(notifyImageId, notifyText, true));
 
                     // 2.5秒後にキャンセル
-                    new Thread(new Runnable() {
+                    new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            AndroidUtils.sleep(2500);
-                            nman.cancel(Const.NOTIF_ID_HANDSUP);
+                            nman.cancel(Const.NOTIF_ID_HEADSUP);
                         }
-                    }).start();
+                    }, 2500);
                 }
             }
         }
     }
 
-    private Notification createNotification(int notifyImageId, String notifyText, boolean handsup) {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-        builder.setContentIntent(contentIntent);
-        builder.setTicker(notifyText);
-        builder.setSmallIcon(notifyImageId);
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setContentText(notifyText);
-        builder.setWhen(System.currentTimeMillis());
-        if (handsup) {
-            builder.setPriority(Notification.PRIORITY_HIGH);
-            builder.setVibrate(new long[]{60000, 100});
+    private Notification createNotification(int notifyImageId, String notifyText, boolean headsUp) {
+
+        NotificationCompat.Builder builder = null;
+
+        if (notifyImageId == Const.NOTIF_ID_MAIN && notificationBuilder != null && headsUp == false) {
+            builder = notificationBuilder;
         }
+        else {
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+            builder = new NotificationCompat.Builder(getApplicationContext());
+            builder.setContentIntent(contentIntent);
+            builder.setContentTitle(getString(R.string.app_name));
+            builder.setWhen(System.currentTimeMillis());
+            if (notifyImageId == Const.NOTIF_ID_MAIN) {
+                notificationBuilder = builder;
+            }
+        }
+
+        if (headsUp) {
+            builder.setCategory(Notification.CATEGORY_SERVICE);
+            builder.setPriority(Notification.PRIORITY_HIGH);
+            builder.setVibrate(new long[]{60000, 100});  // 実行されないように遅延されたバイブレーション
+        }
+        else {
+            builder.setCategory(null);
+            builder.setPriority(Notification.PRIORITY_DEFAULT);
+            builder.setVibrate(null);
+        }
+
+        if (Const.isStatusBarNotifyAlways(this) || Const.isStatusBarNotifyWhenChanged(this)) {
+            builder.setTicker(notifyText);
+        }
+        else {
+            builder.setTicker(null);
+        }
+
+        builder.setSmallIcon(notifyImageId);
+        builder.setContentText(notifyText);
+
         return builder.build();
     }
 
@@ -970,6 +1023,7 @@ public class BackgroundService extends Service {
                     Const.LOGTAG);
             wakelock.acquire();
 
+            // TODO Threadを使わないようにする
             new Thread() {
                 public void run() {
                     AndroidUtils.sleep(60000);

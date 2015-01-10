@@ -79,7 +79,7 @@ public class Const {
     public static final UUID BLUETOOTH_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     public static final int NOTIF_ID_MAIN = 1;
-    public static final int NOTIF_ID_HANDSUP = 2;
+    public static final int NOTIF_ID_HEADSUP = 2;
     public static final int REQUEST_ENABLE_BT = 1;
 
     public static final String LOG_SEND_SERVER = "https://afnf4199ga.appspot.com/andreport/upload";
@@ -89,7 +89,7 @@ public class Const {
 
     /**
      * 初期化
-     * 
+     *
      * @param context Context
      * @return 初回起動であればtrueを返す
      */
@@ -302,13 +302,25 @@ public class Const {
                 Const.getPrefStatusBarNotify(context));
     }
 
+    /** ステータスバー通知 変化した場合 */
+    public static boolean isStatusBarNotifyWhenChanged(Context context) {
+        return MyStringUtlis.eqauls(context.getString(R.string.menu_statusbar_notify__changed),
+                Const.getPrefStatusBarNotify(context));
+    }
+
+    /** ステータスバー通知 アイコンのみ */
+    public static boolean isStatusBarNotifyIconOnly(Context context) {
+        return MyStringUtlis.eqauls(context.getString(R.string.menu_statusbar_notify__icon_only),
+                Const.getPrefStatusBarNotify(context));
+    }
+
     /** ステータスバー通知 通知しない */
     public static boolean isStatusBarNotifyNever(Context context) {
         return MyStringUtlis.eqauls(context.getString(R.string.menu_statusbar_notify__never),
                 Const.getPrefStatusBarNotify(context));
     }
 
-    /** ステータスバー通知 有効 */
+    /** Wi-Fi有効時にサービス開始 */
     public static boolean getPrefStartServiceWhenWifiEnabled(Context context) {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         return pref.getBoolean("menu_start_service_when_wifi_enabled",

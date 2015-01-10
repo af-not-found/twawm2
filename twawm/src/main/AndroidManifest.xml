@@ -20,8 +20,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- android:configChanges="orientation|screenSize|keyboardHidden" -->
-
     <application
         android:name="com.appspot.afnf4199ga.twawm.app.MainApp"
         android:allowBackup="true"
@@ -58,7 +56,6 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_default" />
