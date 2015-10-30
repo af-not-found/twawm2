@@ -130,78 +130,6 @@ public class Logger {
 		}
 	}
 
-	static class FlushThread extends Thread {
-		int len = index;
-		byte[] old_levels = levels;
-		long[] old_times = times;
-		String[] old_contents = contents;
-
-		public FlushThread(int len, byte[] old_levels, long[] old_times, String[] old_contents) {
-			this.len = len;
-			this.old_levels = old_levels;
-			this.old_times = old_times;
-			this.old_contents = old_contents;
-		}
-
-		@Override
-		@SuppressLint("SimpleDateFormat")
-		public void run() {
-
-			long start = System.currentTimeMillis();
-
-			StringBuilder sb = new StringBuilder();
-			SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
-			for (int i = 0; i < len; i++) {
-				sb.append(sdf.format(new Date(old_times[i])));
-				sb.append(" ");
-				sb.append(LEVEL_STR[old_levels[i]]);
-				sb.append(" ");
-				sb.append(old_contents[i]);
-				sb.append("\n");
-			}
-
-			BufferedOutputStream bos = null;
-			try {
-				String state = Environment.getExternalStorageState();
-				if (Environment.MEDIA_MOUNTED.equals(state)) {
-					File outdir = new File(Environment.getExternalStorageDirectory(), Const.LOGDIR);
-					if (outdir.exists() == false) {
-						if (outdir.mkdirs() == false) {
-							Log.e(Const.LOGTAG, "mkdirs failed : " + outdir.getAbsolutePath());
-						}
-					}
-					sdf = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS");
-					String filename = sdf.format(new Date());
-					File outfile = new File(outdir, "log." + filename + ".txt");
-					Log.v(Const.LOGTAG, "logging outfile : " + outfile.getAbsolutePath());
-
-					outfile.createNewFile();
-					bos = new BufferedOutputStream(new FileOutputStream(outfile), 8192);
-					bos.write(sb.toString().getBytes("utf-8"));
-					bos.flush();
-				}
-				else {
-					Log.w(Const.LOGTAG, "logger error, external storage not found");
-				}
-			}
-			catch (Throwable e) {
-				Log.e(Const.LOGTAG, "logger writing error", e);
-			}
-			finally {
-				if (bos != null) {
-					try {
-						bos.close();
-					}
-					catch (IOException e) {
-						Log.i(Const.LOGTAG, "logger close error");
-					}
-				}
-			}
-
-			Log.i(Const.LOGTAG, "logging time : " + (System.currentTimeMillis() - start) + "ms");
-		}
-	}
-
 	private static List<File> listLogFiles(File outdir) {
 
 		List<File> logfiles = new ArrayList<File>();
@@ -344,4 +272,76 @@ public class Logger {
 	public static void setEnableLogging(boolean enabled) {
 		Logger.enableLogging = enabled;
 	}
+
+    static class FlushThread extends Thread {
+        int len = index;
+        byte[] old_levels = levels;
+        long[] old_times = times;
+        String[] old_contents = contents;
+
+        public FlushThread(int len, byte[] old_levels, long[] old_times, String[] old_contents) {
+            this.len = len;
+            this.old_levels = old_levels;
+            this.old_times = old_times;
+            this.old_contents = old_contents;
+        }
+
+        @Override
+        @SuppressLint("SimpleDateFormat")
+        public void run() {
+
+            long start = System.currentTimeMillis();
+
+            StringBuilder sb = new StringBuilder();
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
+            for (int i = 0; i < len; i++) {
+                sb.append(sdf.format(new Date(old_times[i])));
+                sb.append(" ");
+                sb.append(LEVEL_STR[old_levels[i]]);
+                sb.append(" ");
+                sb.append(old_contents[i]);
+                sb.append("\n");
+            }
+
+            BufferedOutputStream bos = null;
+            try {
+                String state = Environment.getExternalStorageState();
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    File outdir = new File(Environment.getExternalStorageDirectory(), Const.LOGDIR);
+                    if (outdir.exists() == false) {
+                        if (outdir.mkdirs() == false) {
+                            Log.e(Const.LOGTAG, "mkdirs failed : " + outdir.getAbsolutePath());
+                        }
+                    }
+                    sdf = new SimpleDateFormat("yyyyMMdd-HHmmss.SSS");
+                    String filename = sdf.format(new Date());
+                    File outfile = new File(outdir, "log." + filename + ".txt");
+                    Log.v(Const.LOGTAG, "logging outfile : " + outfile.getAbsolutePath());
+
+                    outfile.createNewFile();
+                    bos = new BufferedOutputStream(new FileOutputStream(outfile), 8192);
+                    bos.write(sb.toString().getBytes("utf-8"));
+                    bos.flush();
+                }
+                else {
+                    Log.w(Const.LOGTAG, "logger error, external storage not found");
+                }
+            }
+            catch (Throwable e) {
+                Log.e(Const.LOGTAG, "logger writing error", e);
+            }
+            finally {
+                if (bos != null) {
+                    try {
+                        bos.close();
+                    }
+                    catch (IOException e) {
+                        Log.i(Const.LOGTAG, "logger close error");
+                    }
+                }
+            }
+
+            Log.i(Const.LOGTAG, "logging time : " + (System.currentTimeMillis() - start) + "ms");
+        }
+    }
 }
