@@ -122,12 +122,26 @@ public class AndroidUtils {
             return "";
         }
         finally {
-            if (zf != null) {
-                try {
-                    zf.close();
-                }
-                catch (Exception e) {
-                }
+            closeQuietly(zf);
+        }
+    }
+
+    public static void  closeQuietly(Closeable closeable){
+        if (closeable != null) {
+            try {
+                closeable.close();
+            }
+            catch (Exception e) {
+            }
+        }
+    }
+
+    public static void  closeQuietly(HttpURLConnection closeable){
+        if (closeable != null) {
+            try {
+                closeable.disconnect();
+            }
+            catch (Exception e) {
             }
         }
     }
@@ -302,13 +316,7 @@ public class AndroidUtils {
             Logger.e("loadPreferencesFromFile failed", e);
         }
         finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            }
-            catch (Throwable e) {
-            }
+            closeQuietly(input);
         }
         return success;
     }

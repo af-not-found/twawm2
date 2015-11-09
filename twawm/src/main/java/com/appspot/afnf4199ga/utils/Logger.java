@@ -208,20 +208,8 @@ public class Logger {
 			throw e;
 		}
 		finally {
-			if (is != null) {
-				try {
-					is.close();
-				}
-				catch (IOException e) {
-				}
-			}
-			if (zos != null) {
-				try {
-					zos.close();
-				}
-				catch (IOException e) {
-				}
-			}
+            AndroidUtils.closeQuietly(is);
+            AndroidUtils.closeQuietly(zos);
 		}
 
 		// 圧縮に成功したら削除
@@ -239,6 +227,9 @@ public class Logger {
 	}
 
 	public static void startDeleteOldFileThread() {
+        if (enableLogging == false) {
+            return;
+        }
 
 		new Thread(new Runnable() {
 
@@ -289,6 +280,9 @@ public class Logger {
         @Override
         @SuppressLint("SimpleDateFormat")
         public void run() {
+            if (enableLogging == false) {
+                return;
+            }
 
             long start = System.currentTimeMillis();
 
@@ -331,14 +325,7 @@ public class Logger {
                 Log.e(Const.LOGTAG, "logger writing error", e);
             }
             finally {
-                if (bos != null) {
-                    try {
-                        bos.close();
-                    }
-                    catch (IOException e) {
-                        Log.i(Const.LOGTAG, "logger close error");
-                    }
-                }
+                AndroidUtils.closeQuietly(bos);
             }
 
             Log.i(Const.LOGTAG, "logging time : " + (System.currentTimeMillis() - start) + "ms");
