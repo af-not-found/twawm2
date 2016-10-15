@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.NetworkInfo.DetailedState;
@@ -118,8 +119,14 @@ public class BackgroundService extends Service {
             // 念のためsetClickIntentしておく
             DefaultWidgetProvider.setClickIntent(this);
 
+            // Android6.0以上では、初期アイコンを色つきにしないと、白で塗りつぶされてしまう
+            int notifyImageId = R.drawable.ntficon_wimax_gray_batt_na;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                notifyImageId = R.drawable.ntficon_wimax_gray_batt_100;
+            }
+
             // ステータスバー通知とフォアグラウンド起動
-            postNotify(R.drawable.ntficon_wimax_gray_batt_na, getString(R.string.service_started_long));
+            postNotify(notifyImageId, getString(R.string.service_started_long));
         }
         // 一時停止中
         else {
@@ -909,7 +916,7 @@ public class BackgroundService extends Service {
             prevNotifyText = notifyText;
 
             // Android4.4以下
-            if (Build.VERSION.SDK_INT <= 20) {
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT_WATCH) {
 
                 // 初回、またはTicker表示の場合
                 if (notificationBuilder == null || showTicker) {

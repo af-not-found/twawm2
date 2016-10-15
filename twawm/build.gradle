@@ -17,8 +17,8 @@ android {
         applicationId "net.afnf.and.twawm2"
         minSdkVersion 8
         targetSdkVersion 11
-        versionCode 62
-        versionName "0.6.6"
+        versionCode 63
+        versionName "0.6.7"
         testInstrumentationRunner "net.afnf.and.twawm2.MyInstrumentationTestRunner"
     }
 

@@ -403,7 +403,7 @@ public class MyPreferenceActivity extends PreferenceActivity {
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
 
-        if (Build.VERSION.SDK_INT <= 10) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             if (preference != null)
                 if (preference instanceof PreferenceScreen)
                     if (((PreferenceScreen) preference).getDialog() != null) {

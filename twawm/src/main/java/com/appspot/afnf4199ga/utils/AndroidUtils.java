@@ -1,10 +1,12 @@
 package com.appspot.afnf4199ga.utils;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.HttpURLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Map;
